@@ -1,15 +1,44 @@
 package application;
 
-public class WorkflowManager {
+import model.*;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.input.SAXBuilder;
 
+import java.io.File;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+public final class WorkflowManager {
+
+    private static HashMap<String, WorkflowInstance> workflowHashMap = null;
 	
 	/**
 	 *  Parse the XML file, get a Document object and create a Workflow instance from the Document
 	 * @param filePath
 	 * @return
 	 */
-	public Workflow instantiate(String filePath){
-		return null;
+	public static WorkflowInstance instantiate(String filePath){
+		if (workflowHashMap == null) {
+            workflowHashMap = new HashMap<>();
+        }
+
+		try {
+            File xmlFile = new File(filePath);
+
+            SAXBuilder saxBuilder = new SAXBuilder();
+
+            Document document = saxBuilder.build(xmlFile);
+
+            Element workflowElement = document.getRootElement();
+
+        } catch (Exception e) {
+		    e.printStackTrace();
+        }
+
+        return null;
 	}
 	
 	
@@ -19,8 +48,11 @@ public class WorkflowManager {
 	 * call notify to email the appropriate users
 	 * @param t
 	 */
-	public void transition(Token t){
-		return null;
+	public static void transition(WorkflowInstance wfi){
+		List<State> states = wfi.getCurrentStates();
+		for (State state : states) {
+		    if (state.)
+        }
 	}
 	
 	/**
@@ -28,8 +60,8 @@ public class WorkflowManager {
 	 * @param t
 	 * @return
 	 */
-	public boolean checkTransSrc(Token t){
-		return null;
+	public static boolean checkTransSrc(Token t){
+		return t.getCurrentState().checkIfCanMove();
 	}
 	
 	/**
@@ -37,8 +69,8 @@ public class WorkflowManager {
 	 * @param t
 	 * @return
 	 */
-	public boolean checkTransDest(Token t){
-		return null;
+	public static boolean checkTransDest(Token t){
+		return t.getNextState().checkIfCanAccept();
 	}
 	
 	/**
@@ -46,8 +78,8 @@ public class WorkflowManager {
 	 * @param t
 	 * @return
 	 */
-	public boolean invokeProgrammerMethod(Token t, String pckage, String class, String method){
-		
+	public static boolean invokeProgrammerMethod(Token t, String packageName, String className, String methodName){
+		return false;
 	}
 	
 	/**
@@ -56,16 +88,37 @@ public class WorkflowManager {
 	 * This will be done as time permits.
 	 * @return
 	 */
-	public void notifyUser(){
+	public static void notifyUser(){
 		return;
 	}
 	
 	/**
 	 * Terminates an ongoing workflow instance and removes all the tokens associated with that workflow instance
-	 * @param workflowInstanceID
+	 * @param workflowID
 	 */
-	public void endWorkflow(String workflowInstanceID){
+	public static void endWorkflow(int workflowID){
 		return;
 	}
+
+	public static List<Form> getFormFields(WorkflowInstance wfi) {
+	    List<Form> forms = new ArrayList<>();
+	    wfi.getCurrentStates().forEach(state -> forms.addAll(state.getForms()));
+        return forms;
+    }
+
+    /**
+     * Give a new workflowID based on current time. Duplicate avoided.
+     * @return the new workflowID
+     */
+	private static int assignWorkflowID() {
+        return Instant.now().hashCode();
+    }
+
+    /**
+     *
+     */
+    protected static void clearWorkflowData() {
+        workflowHashMap = null;
+    }
 
 }

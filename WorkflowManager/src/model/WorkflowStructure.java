@@ -1,8 +1,8 @@
 package model;
 
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class WorkflowStructure {
 	
@@ -12,6 +12,13 @@ public class WorkflowStructure {
     //String is connection name key and Connection is actual connection
     HashMap<String, Connection> Connections;
     //A list of specific start states
-    ArrayList<StartState> StartStates;
+    State StartState;
 
+    public WorkflowStructure(List<State> states, List<model.Connection> connections, List<Form> forms, List<SelectionState> selectionStates, List<BranchingState>) {
+
+    }
+
+    public State getStartState() {
+        return StartState;
+    }
 }
