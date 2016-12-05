@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="223.0" prefWidth="310.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8" fx:controller="controller.EditUserController">
+   <children>
+      <Text layoutX="14.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit User">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Text>
+      <Separator layoutX="14.0" layoutY="45.0" prefWidth="120.0" />
+      <Label layoutX="35.0" layoutY="73.0" text="Name" />
+      <Label layoutX="35.0" layoutY="103.0" prefHeight="17.0" prefWidth="32.0" text="Job" />
+      <TextField layoutX="81.0" layoutY="69.0" />
+      <TextField layoutX="81.0" layoutY="99.0" />
+      <Label layoutX="35.0" layoutY="139.0" prefHeight="17.0" prefWidth="32.0" text="Role" />
+      <MenuButton layoutX="81.0" layoutY="135.0" mnemonicParsing="false" text="User Type">
+        <items>
+          <MenuItem mnemonicParsing="false" text="Action 1" />
+          <MenuItem mnemonicParsing="false" text="Action 2" />
+        </items>
+      </MenuButton>
+      <Button layoutX="178.0" layoutY="171.0" mnemonicParsing="false" text="Save" />
+      <Button layoutX="237.0" layoutY="171.0" mnemonicParsing="false" text="Cancel" />
+   </children>
+</AnchorPane>
