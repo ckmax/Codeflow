@@ -4,17 +4,19 @@ import java.util.List;
 
 public class Form {
 
-    State belongsTo;
+    private State belongsTo;
+    private List<Field> fields;
 
-	//An actual form will just be a hashmap. This is just a wrapper class.
-    //Key String is fieldname
-    //Value related to key is the value user entered for that field
-    List<Field> fields;
-    //Method to get value given key. Will just use above. 
-    String getValue(String Key);
-
+    public Form(State state, List<Field> fields) {
+        this.belongsTo = state;
+        this.fields = fields;
+    }
 
     public List<Field> getFields() {
-        return fields;
+        return this.fields;
+    }
+
+    public State belongsTo () {
+        return belongsTo;
     }
 }

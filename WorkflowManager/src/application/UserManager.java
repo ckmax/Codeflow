@@ -10,14 +10,15 @@ public final class UserManager {
 
 	/**
 	 * Create new User
-	 * return 0 if successful, 1 if there's already a user with the same username, -1 otherwise
-	 * @param username
-	 * @param password
-	 * @param email
-	 * @param userType
-	 * @return
+	 * @param username username
+	 * @param password password
+	 * @param userType user type
+     * @param email email address
+     * @return 0 if successful
+     *         1 if there's already a user with the same username
+     *         2 if password is illegal
 	 */
-	public static int createUser(String username, String password, String email, String userType){
+	public static int createUser(String username, String password, String userType, String email){
         if (userHashMap == null) {
             userHashMap = new HashMap<>();
         }
@@ -27,19 +28,20 @@ public final class UserManager {
         }
 
         if (isIllegalPassword(password)) {
-            return -1;
+            return 2;
         }
 
-        User newUser = new User();
+        User newUser = new User(username, password, userType, email);
         userHashMap.put(username, newUser);
         return 0;
 	}
 	
 	/**
 	 * Remove user
-	 * return 0 if successful, 1 if no user has the provided username, -1 otherwise
-	 * @param username
-	 * @return
+	 * @param username username
+	 * @return 0 if successful
+     *         1 if no user has the provided username
+     *         -1 if there's no user at all
 	 */
 	public static int removeUser(String username){
 		if (userHashMap == null) {
@@ -55,15 +57,15 @@ public final class UserManager {
 	}
 	
 	/**
-	 * Edit a current user
-	 * return 0 if successful, 1 if no user has the provided username, -1 otherwise
-	 * @param username
-	 * @param password
-	 * @param email
-	 * @param userType
-	 * @return
+	 * Edit a current user's general information
+	 * @param username username
+	 * @param userType user type
+	 * @param email email address
+	 * @return 0 if successful
+     *         1 if no user has the provided username
+     *         -1 if there's no user at all
 	 */
-	public static int editUser(String username, String password, String email, String userType){
+	public static int editInfo(String username, String userType, String email){
 		if (userHashMap == null) {
             return -1;
         }
@@ -72,50 +74,103 @@ public final class UserManager {
 			return 1;
 		}
 
-		User user = new User();
-        userHashMap.remove(username);
-        userHashMap.put(username, user);
+		User user = userHashMap.get(username);
+		user.resetUserType(userType);
+		user.resetEmail(email);
+
+        return 0;
+	}
+
+    /**
+     * Change a user's password
+     * @param username username
+     * @param oldPassword old password
+     * @param newPassword new password
+     * @return 0 if successful
+     *         1 if no user has the provided username
+     *         2 if the password is wrong
+     *         -1 if there's no user at all
+     */
+	public static int editPassword(String username, String oldPassword, String newPassword) {
+        if (userHashMap == null) {
+            return -1;
+        }
+
+        if (!userHashMap.containsKey(username)) {
+            return 1;
+        }
+
+        if (!userHashMap.get(username).resetPassword(oldPassword, newPassword)) {
+            return 2;
+        }
+
+        return 0;
+    }
+	
+	/**
+	 * Login
+	 * @param username username
+	 * @param password password
+	 * @return 0 if successful
+     *         1 if no user has the provided username
+     *         2 if the password is wrong
+     *         3 if the user is already logged in
+     *         -1 if there's no user at all
+	 */
+	public static int login(String username, String password){
+        if (userHashMap == null) {
+            return -1;
+        }
+
+        if (!userHashMap.containsKey(username)) {
+            return 1;
+        }
+
+	    User user = userHashMap.get(username);
+
+        if (user.isLoggedIn()) {
+            return 3;
+        }
+
+        if (!user.login(password)) {
+            return 2;
+        }
+
         return 0;
 	}
 	
 	/**
-	 * Return true if login is successful, false otherwise
-	 * we assume that the username is an email
-	 * @param username
-	 * @param password
-	 * @return
+	 * Logout
+	 * @param username username
+	 * @return 0 if successful
+     *         1 if no user has the provided username
+     *         3 if the user is not logged in
+     *         -1 if there's no user at all
 	 */
-	public static boolean login(String username, String password){
-		User user = userHashMap.get(username);
-        if (!user.getPassword().equals(password)) {
-            return false;
-        }
-        if (user.isLoggedIn()) {
-            return false;
+	public static int logout(String username){
+        if (userHashMap == null) {
+            return -1;
         }
 
-        user.login();
-        return true;
-	}
-	
-	/**
-	 * Return true if successful, false if the user is not logged in
-	 * @param username
-	 * @return
-	 */
-	public static boolean logout(String username){
-		if (user.isLoggedIn()) {
-            user.logout();
-            return true;
+        if (!userHashMap.containsKey(username)) {
+            return 1;
         }
-        return false;
+
+		User user = userHashMap.get(username);
+
+        if (!user.isLoggedIn()) {
+            return 3;
+        }
+
+        user.logout();
+        return 0;
 	}
 
     /**
      * Check whether the password is a legal password or not.
-     * @param password: the password to check
-     * @return true: the given password is legal
-     *         false: the given password is illegal
+     * @param password the password to check
+     * @return true if the given password is legal
+     *         false if the given password is illegal
      */
 	private static boolean isIllegalPassword(String password) {
         return false;
