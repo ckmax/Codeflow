@@ -1,38 +1,32 @@
 package model;
 
-import java.text.Normalizer.Form;
+import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
-public class Token {
+public abstract class State {
 	
-	//Current state token is in
-    State CurrentState;
-    //All forms associated with token at the moment
-    List<Form> Forms;
-    //Workflow instance that this token is in
-    WorkflowInstance workflowinstance;
-    //A boolean to test whether this token is active and can be moved to the next state
+	//form required to move to next state
+    FormType requiredForm;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    Boolean active;
-    //Submit forms for this token
-    void SubmitForms(ArrayList<Form> Forms);
-    void ClearForms();
-
-
+    //unique id
+	String name_id;
+    
+	//boolean to denote whether this is start state
+	boolean isStartState;
+	
+    //gets all the required forms
+    Form createFormForThisState(){
+    	List<Field> fields = new ArrayList<Field>();
+    	for(Entry<String, String> entry : this.requiredForm.FormFields.entrySet()){
+    		Field newField = new Field(entry.getKey(), null, entry.getValue());
+    		fields.add(newField);
+    	}
+    	return new Form(fields);
+    }
+    
+    
+    
 }
