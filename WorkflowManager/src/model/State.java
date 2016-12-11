@@ -4,47 +4,29 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
-public class State {
+public abstract class State {
 	
-    private List<Form> forms;
+	//form required to move to next state
+    FormType requiredForm;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    //unique id
 	String name_id;
-    //A hashmap of all connections coming off this state. String key is connection name_id
-	HashMap<String, Connection>ConnectionsLeaving;
-	//A hashmap of all connections coming into this state. String key is connection name_id    
-	HashMap<String, Connection> connectionHashMap;
-	//All tokens within this state
-    ArrayList<Token> Tokens;
-    //Check to see if token can be moved from one state to another
-    boolean checkIfCanMoveToken() {
-        return false;
+    
+	//boolean to denote whether this is start state
+	boolean isStartState;
+	
+    //gets all the required forms
+    Form createFormForThisState(){
+    	List<Field> fields = new ArrayList<Field>();
+    	for(Entry<String, String> entry : this.requiredForm.FormFields.entrySet()){
+    		Field newField = new Field(entry.getKey(), null, entry.getValue());
+    		fields.add(newField);
+    	}
+    	return new Form(fields);
     }
-
-
-    public List<State> nextStates() {
-        return null;
-    }
-
-    public List<Form> getForms() {
-        return forms;
-    }
+    
+    
+    
 }
